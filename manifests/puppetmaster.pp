@@ -46,6 +46,10 @@ class puppet::puppetmaster::base inherits puppet::base {
                     "puppet://$server/puppet/cron.d/puppetmaster" ],
         owner => root, group => 0, mode => 0644;
     }
+
+    # namespaceauth.conf breaks puppetmaster
+    File['puppet_namespaceauth_config'] { ensure => absent }
+
 }
 
 
