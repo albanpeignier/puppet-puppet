@@ -52,6 +52,23 @@ class puppet::base {
         notify => Service[puppet],
         owner => root, group => 0, mode => 600;
     }
+
+    $real_puppet_namespaceauth_config = $puppet_namespaceauth_config ? {
+        '' => "/etc/puppet/namespaceauth.conf",
+        default => $puppet_namespaceauth_config,
+    }
+
+    file { 'puppet_namespaceauth_config':
+        path => "$real_puppet_namespaceauth_config",
+        source => [ "puppet://$server/files/puppet/client/${fqdn}/namespaceauth.conf",
+                "puppet://$server/files/puppet/client/namespaceauth.conf.$operatingsystem",
+                "puppet://$server/files/puppet/client/namespaceauth.conf",
+                "puppet://$server/puppet/client/namespaceauth.conf.$operatingsystem",
+                "puppet://$server/puppet/client/namespaceauth.conf" ],
+        notify => Service[puppet],
+        owner => root, group => 0, mode => 600;
+    }
+
     service{'puppet':
         ensure => running,
         enable => true,
