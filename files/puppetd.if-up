@@ -1,0 +1,6 @@
+#!/bin/sh
+# file managed by puppet
+
+if (ping -c1 -W10 puppet &>/dev/null); then
+  /usr/local/sbin/launch-puppet
+fi
