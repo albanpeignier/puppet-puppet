@@ -67,21 +67,9 @@ class puppet::client {
     group  => "puppet",
   }
 
-  case $operatingsystem {
-
-    Debian: {
-      # Starts puppet client only when we have network
-      file {"/etc/network/if-up.d/puppetd":
-        ensure => present,
-        mode   => 655,
-        source => "puppet:///puppet/puppetd.if-up",
-      }
-
-      # stop puppet client as soon as we cut networking
-      file {"/etc/network/if-down.d/puppetd":
-        ensure => absent,
-      }
-    }
+  # Don't start puppet with network interface
+  file { ["/etc/network/if-up.d/puppetd", "/etc/network/if-down.d/puppetd"]:
+    ensure => absent
   }
 
   $puppet_server = "puppet"
