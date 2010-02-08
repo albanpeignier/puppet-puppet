@@ -35,7 +35,7 @@ class puppet::client {
     tag       => "install-puppet",
     pattern   => "ruby /usr/sbin/puppetd -w",
     # make sure the puppet cron is installed before the service is stopped
-    require => Cron[puppetd]
+    require => [ Cron[puppetd], File["/etc/puppet/puppet.conf"] ]
   }
 
   user { "puppet":
