@@ -129,6 +129,12 @@ class puppet::augeas {
     pin => "release a=lenny-backports",
     priority => 999
   }
+
+  apt::preferences { "libaugeas0":
+    package => "libaugeas0", 
+    pin => "release a=lenny-backports",
+    priority => 999
+  }
   
   file { ["/usr/local/share/augeas", "/usr/local/share/augeas/lenses"]:
     ensure => directory
