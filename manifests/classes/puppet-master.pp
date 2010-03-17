@@ -28,14 +28,6 @@ class puppet::master inherits puppet::client {
       ensure => directory
     }
 
-    tidy { "/var/lib/puppet/reports":
-      age => '1w',
-      backup => false,
-      recurse => true,
-      rmdirs => true,
-      type => mtime
-    }
-
     file { "/etc/puppet/fileserver.conf":
         source => [ "puppet://$server/files/puppet/master/fileserver.conf",
                     "puppet://$server/puppet/master/fileserver.conf" ],
