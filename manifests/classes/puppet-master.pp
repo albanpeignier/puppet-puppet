@@ -48,6 +48,8 @@ class puppet::master inherits puppet::client {
     # namespaceauth.conf breaks puppetmaster
     File["/etc/puppet/namespaceauth.conf"] { ensure => absent }
 
+    # used to create passwords
+    package { pwgen: }
 }
 
 class puppet::master::storeconfigs {
