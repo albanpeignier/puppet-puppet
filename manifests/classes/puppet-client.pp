@@ -144,9 +144,19 @@ class puppet::augeas {
     pin => "release a=lenny-backports",
     priority => 999
   }
+
+  apt::preferences { "augeas-lenses":
+    package => "augeas-lenses", 
+    pin => "release a=lenny-backports",
+    priority => 999
+  }
   
   file { ["/usr/local/share/augeas", "/usr/local/share/augeas/lenses"]:
     ensure => directory
+  }
+
+  file { "/usr/share/augeas/lenses/contrib": # used by CampToCamp modules
+    ensure => "/usr/local/share/augeas/lenses"
   }
 
   define lens($source) {
