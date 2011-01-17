@@ -1,4 +1,5 @@
 class puppet::client {
+  include puppet::common
 
   package {"facter":
     ensure  => $facter_version ? {
@@ -16,6 +17,13 @@ class puppet::client {
     },
     require => Package["facter"],
     tag     => "install-puppet",
+  }
+
+  apt::preferences { puppet:
+    package => puppet, 
+    pin => "release a=lenny-backports",
+    priority => 999,
+    require => Apt::Sources_List["lenny-backports"]
   }
 
   package {"lsb-release":

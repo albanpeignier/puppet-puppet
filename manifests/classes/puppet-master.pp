@@ -1,5 +1,12 @@
 class puppet::master inherits puppet::client {
-    package { puppetmaster: ensure => present }
+    package { puppetmaster: ensure => latest }
+
+    apt::preferences { puppetmaster:
+      package => puppetmaster, 
+      pin => "release a=lenny-backports",
+      priority => 999,
+      require => Apt::Sources_List["lenny-backports"]
+    }
 
     service { puppetmaster:
         ensure => running,
