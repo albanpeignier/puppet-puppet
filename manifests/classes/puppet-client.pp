@@ -15,7 +15,7 @@ class puppet::client {
       ""      => latest,
       default => $puppet_client_version,
     },
-    require => [Package["facter"], Apt::Preferences["puppet"]]
+    require => [Package["facter"], Apt::Preferences["puppet"]],
     tag     => "install-puppet",
   }
 
