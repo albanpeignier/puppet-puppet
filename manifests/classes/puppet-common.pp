@@ -1,4 +1,4 @@
-class puppet::comon {
+class puppet::common {
   include apt::backports
   apt::preferences { puppet-common:
     package => puppet, 

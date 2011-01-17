@@ -1,5 +1,8 @@
 class puppet::master inherits puppet::client {
-    package { puppetmaster: ensure => latest }
+    package { puppetmaster: 
+      ensure => latest,
+      require => Apt::Preferences["puppetmaster"]
+    }
 
     apt::preferences { puppetmaster:
       package => puppetmaster, 
