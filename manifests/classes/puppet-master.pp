@@ -60,6 +60,18 @@ class puppet::master inherits puppet::client {
 
     # used to create passwords
     package { pwgen: }
+
+    file { ["/var/lib/puppet/conf", "/var/lib/puppet/conf/releases", "/var/lib/puppet/conf/shared"]:
+      ensure => directory,
+      mode => 2775,
+      group => src,
+      require => File["/var/lib/puppet"]
+    }
+
+    file { "/var/lib/puppet/conf/current":
+      mode => 775,
+      group => src
+    }
 }
 
 class puppet::master::storeconfigs {
