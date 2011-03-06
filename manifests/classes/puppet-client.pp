@@ -138,7 +138,7 @@ class puppet::augeas {
     package => libaugeas-ruby, 
     pin => "release a=lenny-backports",
     priority => 999,
-    require => Apt::Preferences["libaugeas-ruby1.8"]
+    require => Apt::Preferences["libaugeas-ruby18"]
   }
 
   apt::preferences { "libaugeas-ruby18":
