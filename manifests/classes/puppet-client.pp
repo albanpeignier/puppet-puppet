@@ -166,7 +166,7 @@ class puppet::augeas {
 
   file { "/usr/share/augeas/lenses/contrib": # used by CampToCamp modules
     ensure => "/usr/local/share/augeas/lenses",
-    require => Package["/usr/local/share/augeas/lenses"]
+    require => File["/usr/local/share/augeas/lenses"]
   }
 
   define lens($source) {
