@@ -19,11 +19,13 @@ class puppet::client {
     tag     => "install-puppet",
   }
 
-  apt::preferences { puppet:
-    package => puppet, 
-    pin => "release a=lenny-backports",
-    priority => 999,
-    require => [Apt::Sources_List["lenny-backports"], Apt::Preferences["puppet-common"]]
+  if $lsbdistcodename == "lenny" {
+    apt::preferences { puppet:
+      package => puppet, 
+      pin => "release a=lenny-backports",
+      priority => 999,
+      require => [Apt::Sources_List["lenny-backports"], Apt::Preferences["puppet-common"]]
+    }
   }
 
   package {"lsb-release":
@@ -60,7 +62,7 @@ class puppet::client {
     owner => root, group => 0, mode => 644;
   }
 
-  if ($hostname == 'sandbox') {
+  if $hostname == 'sandbox' {
     line { "puppet-certname-sandbox":
       line => "certname = sandbox",
       file => "/etc/puppet/puppet.conf",
@@ -134,31 +136,6 @@ class puppet::augeas {
     require => Apt::Preferences[libaugeas-ruby]
   }
 
-  apt::preferences { libaugeas-ruby:
-    package => libaugeas-ruby, 
-    pin => "release a=lenny-backports",
-    priority => 999,
-    require => Apt::Preferences["libaugeas-ruby18"]
-  }
-
-  apt::preferences { "libaugeas-ruby18":
-    package => "libaugeas-ruby1.8", 
-    pin => "release a=lenny-backports",
-    priority => 999
-  }
-
-  apt::preferences { "libaugeas0":
-    package => "libaugeas0", 
-    pin => "release a=lenny-backports",
-    priority => 999
-  }
-
-  apt::preferences { "augeas-lenses":
-    package => "augeas-lenses", 
-    pin => "release a=lenny-backports",
-    priority => 999
-  }
-  
   file { ["/usr/local/share/augeas", "/usr/local/share/augeas/lenses"]:
     ensure => directory,
     require => Package[libaugeas-ruby]
@@ -175,4 +152,36 @@ class puppet::augeas {
     }
   }
 
+  if $lsbdistcodename == "lenny" {
+    include puppet::augeas::lenny
+  }
+  
+  class lenny {
+    apt::preferences { libaugeas-ruby:
+      package => libaugeas-ruby, 
+      pin => "release a=lenny-backports",
+      priority => 999,
+      require => Apt::Preferences["libaugeas-ruby18"]
+    }
+
+    apt::preferences { "libaugeas-ruby18":
+      package => "libaugeas-ruby1.8", 
+      pin => "release a=lenny-backports",
+      priority => 999
+    }
+
+    apt::preferences { "libaugeas0":
+      package => "libaugeas0", 
+      pin => "release a=lenny-backports",
+      priority => 999
+    }
+
+    apt::preferences { "augeas-lenses":
+      package => "augeas-lenses", 
+      pin => "release a=lenny-backports",
+      priority => 999
+    }
+  }
+
 }
+

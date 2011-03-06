@@ -1,14 +1,19 @@
 class puppet::master inherits puppet::client {
     package { puppetmaster: 
-      ensure => latest,
+      ensure  => $facter_version ? {
+        ""      => latest,
+        default => $facter_version,
+      },
       require => Apt::Preferences["puppetmaster"]
     }
 
-    apt::preferences { puppetmaster:
-      package => puppetmaster, 
-      pin => "release a=lenny-backports",
-      priority => 999,
-      require => Apt::Sources_List["lenny-backports"]
+    if $lsbdistcodename == "lenny" {
+      apt::preferences { puppetmaster:
+        package => puppetmaster, 
+        pin => "release a=lenny-backports",
+        priority => 999,
+        require => Apt::Sources_List["lenny-backports"]
+      }
     }
 
     service { puppetmaster:
