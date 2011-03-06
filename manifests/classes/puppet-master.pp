@@ -12,9 +12,10 @@ class puppet::master inherits puppet::client {
     }
 
     service { puppetmaster:
-        ensure => running,
-        enable => true,
-        require => [ Package[puppet], Package[puppetmaster] ]
+      ensure => running,
+      enable => true,
+      pattern => "/usr/bin/puppet master",
+      require => [ Package[puppet], Package[puppetmaster] ]
     }
 
     Service[puppet]{
