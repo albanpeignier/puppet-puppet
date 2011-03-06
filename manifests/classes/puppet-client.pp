@@ -15,7 +15,7 @@ class puppet::client {
       ""      => latest,
       default => $puppet_client_version,
     },
-    require => [Package["facter"], Apt::Preferences["puppet"]],
+    require => Package["facter"],
     tag     => "install-puppet",
   }
 
@@ -24,6 +24,7 @@ class puppet::client {
       package => puppet, 
       pin => "release a=lenny-backports",
       priority => 999,
+      before => Package[puppet],
       require => [Apt::Sources_List["lenny-backports"], Apt::Preferences["puppet-common"]]
     }
   }
@@ -132,9 +133,7 @@ class puppet::client {
 class puppet::augeas {
   include apt::tryphon
 
-  package { libaugeas-ruby: 
-    require => Apt::Preferences[libaugeas-ruby]
-  }
+  package { libaugeas-ruby: }
 
   file { ["/usr/local/share/augeas", "/usr/local/share/augeas/lenses"]:
     ensure => directory,
@@ -161,6 +160,7 @@ class puppet::augeas {
       package => libaugeas-ruby, 
       pin => "release a=lenny-backports",
       priority => 999,
+      before => Package[libaugeas-ruby],
       require => Apt::Preferences["libaugeas-ruby18"]
     }
 

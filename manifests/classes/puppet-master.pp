@@ -3,8 +3,7 @@ class puppet::master inherits puppet::client {
       ensure  => $facter_version ? {
         ""      => latest,
         default => $facter_version,
-      },
-      require => Apt::Preferences["puppetmaster"]
+      }
     }
 
     if $lsbdistcodename == "lenny" {
@@ -12,6 +11,7 @@ class puppet::master inherits puppet::client {
         package => puppetmaster, 
         pin => "release a=lenny-backports",
         priority => 999,
+        before => Package[puppetmaster],
         require => Apt::Sources_List["lenny-backports"]
       }
     }
