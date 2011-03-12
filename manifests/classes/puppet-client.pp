@@ -63,15 +63,6 @@ class puppet::client {
     owner => root, group => 0, mode => 644;
   }
 
-  if $hostname == 'sandbox' {
-    line { "puppet-certname-sandbox":
-      line => "certname = sandbox",
-      file => "/etc/puppet/puppet.conf",
-      require => File["/etc/puppet/puppet.conf"],
-      before => Service[puppet]
-    }
-  }
-
   file { "/etc/puppet/namespaceauth.conf":
     source => [ "puppet://$server/files/puppet/client/${fqdn}/namespaceauth.conf",
                 "puppet://$server/files/puppet/client/namespaceauth.conf.$operatingsystem",
