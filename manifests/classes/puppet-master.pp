@@ -78,6 +78,12 @@ class puppet::master inherits puppet::client {
       mode => 775,
       group => src
     }
+
+    # /etc/logrotate.d/puppet provides needed configuration
+    # duplicated configuration breaks logrotate
+    file { "/etc/logrotate.d/puppetmaster":
+      ensure => absent
+    }  
 }
 
 class puppet::master::storeconfigs {
