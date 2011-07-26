@@ -1,4 +1,5 @@
 class puppet::client {
+  include debian
   include puppet::common
 
   package {"facter":
@@ -19,7 +20,7 @@ class puppet::client {
     tag     => "install-puppet",
   }
 
-  if $lsbdistcodename == "lenny" {
+  if $debian::lenny {
     apt::preferences { puppet:
       package => puppet, 
       pin => "release a=lenny-backports",
