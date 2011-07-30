@@ -6,7 +6,7 @@ class puppet::master inherits puppet::client {
       }
     }
 
-    if $lsbdistcodename == "lenny" {
+    if $debian::lenny {
       apt::preferences { puppetmaster:
         package => puppetmaster, 
         pin => "release a=lenny-backports",

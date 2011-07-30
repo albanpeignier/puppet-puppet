@@ -143,7 +143,7 @@ class puppet::augeas {
     }
   }
 
-  if $lsbdistcodename == "lenny" {
+  if $debian::lenny {
     include puppet::augeas::lenny
   }
   

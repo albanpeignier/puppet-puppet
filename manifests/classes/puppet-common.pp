@@ -1,6 +1,6 @@
 class puppet::common {
   include apt::backports
-  if $lsbdistcodename == "lenny" {
+  if $debian::lenny {
     apt::preferences { puppet-common:
       package => puppet-common, 
       pin => "release a=lenny-backports",
