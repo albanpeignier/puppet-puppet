@@ -1,0 +1,12 @@
+/var/log/puppet/masterhttp.log {
+  missingok
+  notifempty
+  create 0644 puppet puppet
+  compress
+
+  rotate 2
+  
+  postrotate
+    pkill -USR2 -u puppet -f "puppet master" || true
+  endscript
+}

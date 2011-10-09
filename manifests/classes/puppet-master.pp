@@ -79,10 +79,8 @@ class puppet::master inherits puppet::client {
       group => src
     }
 
-    # /etc/logrotate.d/puppet provides needed configuration
-    # duplicated configuration breaks logrotate
     file { "/etc/logrotate.d/puppetmaster":
-      ensure => absent
+      source => "puppet://$server/puppet/master/puppetmaster.logrotate"
     }  
 }
 
