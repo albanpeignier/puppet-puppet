@@ -16,6 +16,16 @@ class puppet::master inherits puppet::client {
       }
     }
 
+    if $debian::squeeze {
+      apt::preferences { puppetmaster:
+        package => puppetmaster, 
+        pin => "release a=squeeze-backports",
+        priority => 999,
+        before => Package[puppetmaster],
+        require => Apt::Sources_List["squeeze-backports"]
+      }
+    }
+
     service { puppetmaster:
       ensure => running,
       enable => true,
