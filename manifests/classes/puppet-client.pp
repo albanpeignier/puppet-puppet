@@ -11,7 +11,7 @@ class puppet::client {
     tag     => "install-puppet",
   }
 
-  package {"puppet":
+  package { puppet:
     ensure  => $puppet_client_version ? {
       ""      => latest,
       default => $puppet_client_version,
@@ -27,6 +27,16 @@ class puppet::client {
       priority => 999,
       before => Package[puppet],
       require => [Apt::Sources_List["lenny-backports"], Apt::Preferences["puppet-common"]]
+    }
+  }
+
+  if $debian::squeeze {
+    apt::preferences { puppet:
+      package => puppet, 
+      pin => "release a=squeeze-backports",
+      priority => 999,
+      before => Package[puppet],
+      require => [Apt::Sources_List["squeeze-backports"], Apt::Preferences["puppet-common"]]
     }
   }
 
