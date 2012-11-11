@@ -9,4 +9,14 @@ class puppet::common {
       before => Package[puppet]
     }
   }
+
+  if $debian::squeeze {
+    apt::preferences { puppet-common:
+      package => puppet-common, 
+      pin => "release a=squeeze-backports",
+      priority => 999,
+      require => Apt::Sources_List["squeeze-backports"],
+      before => Package[puppet]
+    }
+  }
 }
