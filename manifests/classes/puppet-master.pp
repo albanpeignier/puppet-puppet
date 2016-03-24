@@ -88,7 +88,10 @@ class puppet::master inherits puppet::client {
       mode => 775,
       group => src
     }
+    include puppet::master::logrotate
+}
 
+class puppet::master::logrotate {
     file { "/etc/logrotate.d/puppetmaster":
       source => "puppet://$server/puppet/master/puppetmaster.logrotate"
     }  
