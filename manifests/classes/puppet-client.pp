@@ -70,7 +70,7 @@ class puppet::client {
   file { "/etc/puppet/puppet.conf":
     source => [ "puppet://$server/files/puppet/client/${fqdn}/puppet.conf",
       "puppet://$server/files/puppet/client/puppet.conf",
-      "puppet://$server/puppet/client/puppet.conf" ],
+      "puppet://$server/modules/puppet/client/puppet.conf" ],
     owner => root, group => 0, mode => 644;
   }
 
@@ -78,8 +78,8 @@ class puppet::client {
     source => [ "puppet://$server/files/puppet/client/${fqdn}/namespaceauth.conf",
                 "puppet://$server/files/puppet/client/namespaceauth.conf.$operatingsystem",
                 "puppet://$server/files/puppet/client/namespaceauth.conf",
-                "puppet://$server/puppet/client/namespaceauth.conf.$operatingsystem",
-                "puppet://$server/puppet/client/namespaceauth.conf" ],
+                "puppet://$server/modules/puppet/client/namespaceauth.conf.$operatingsystem",
+                "puppet://$server/modules/puppet/client/namespaceauth.conf" ],
     owner => root, group => 0, mode => 600;
   }
 
@@ -120,12 +120,12 @@ class puppet::client {
   }
 
   file { "/etc/default/puppet":
-    source => "puppet:///puppet/client/puppet.default",
+    source => "puppet:///modules/puppet/client/puppet.default",
     require => Package["puppet"]
   }
 
   file { "/etc/init.d/puppet":
-    source => "puppet:///puppet/client/puppet.initd",
+    source => "puppet:///modules/puppet/client/puppet.initd",
     mode => 755,
     require => Package["puppet"]
   }

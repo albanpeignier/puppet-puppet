@@ -39,7 +39,7 @@ class puppet::master inherits puppet::client {
 
     File["/etc/puppet/puppet.conf"]{
         source => [ "puppet://$server/files/puppet/master/puppet.conf",
-                    "puppet://$server/puppet/master/puppet.conf" ],
+                    "puppet://$server/modules/puppet/master/puppet.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
     }
 
@@ -56,7 +56,7 @@ class puppet::master inherits puppet::client {
 
     file { "/etc/puppet/fileserver.conf":
         source => [ "puppet://$server/files/puppet/master/fileserver.conf",
-                    "puppet://$server/puppet/master/fileserver.conf" ],
+                    "puppet://$server/modules/puppet/master/fileserver.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
         owner => root, group => 0, mode => 644;
     }
@@ -67,7 +67,7 @@ class puppet::master inherits puppet::client {
 
     # restart the master from time to time to avoid memory problems
     file{'/etc/cron.d/puppetmaster.cron':
-        source => "puppet://$server/puppet/puppetmaster.cron",
+        source => "puppet://$server/modules/puppet/puppetmaster.cron",
         owner => root, group => 0, mode => 0644;
     }
 
@@ -93,7 +93,7 @@ class puppet::master inherits puppet::client {
 
 class puppet::master::logrotate {
     file { "/etc/logrotate.d/puppetmaster":
-      source => "puppet://$server/puppet/master/puppetmaster.logrotate",
+      source => "puppet://$server/modules/puppet/master/puppetmaster.logrotate",
       mode => 644
     }  
 }
