@@ -1,6 +1,8 @@
 class puppet::common {
   include apt::backports
-  include puppet::ruby
+  if $debian::wheezy {
+    include puppet::ruby
+  }
 
   if $debian::lenny {
     apt::preferences { puppet-common:
