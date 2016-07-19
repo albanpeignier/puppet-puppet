@@ -1,5 +1,8 @@
 class puppet::common {
-  include apt::backports
+  if !$debian::jessie {
+    include apt::backports
+  }
+
   if $debian::wheezy {
     include puppet::ruby
   }
