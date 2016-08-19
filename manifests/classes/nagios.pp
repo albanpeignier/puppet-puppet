@@ -4,9 +4,8 @@ class puppet::nagios {
     require => Package['nagios']
   }
 
-  file { '/etc/sudoers.d/check_puppetmaster':
-    content => "nagios  ALL=(puppet) NOPASSWD: /usr/local/lib/nagios/plugins/check_puppetmaster\n",
-    require => Package['sudo']
+  sudo::conf { 'check_puppetmaster':
+    content => "nagios  ALL=(puppet) NOPASSWD: /usr/local/lib/nagios/plugins/check_puppetmaster"
   }
 
   nagios::plugin { 'check_puppetmaster':
