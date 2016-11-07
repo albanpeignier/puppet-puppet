@@ -43,12 +43,6 @@ class puppet::master inherits puppet::client {
         notify => [Service[puppet],Service[puppetmaster] ],
     }
 
-    file { "/var/lib/puppet":
-      ensure => directory,
-      group => puppet,
-      mode => 775
-    }
-
     file { "/var/lib/puppet/reports": 
       owner => puppet,
       ensure => directory
