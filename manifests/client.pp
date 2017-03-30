@@ -1,5 +1,8 @@
 # Installs and parameters puppet client
-class puppet::client {
+class puppet::client (
+  $facter_version = '',
+  $puppet_client_version = ''
+  ) {
   include debian
   include puppet::common
 
@@ -9,7 +12,7 @@ class puppet::client {
   }
 
   package {'facter':
-    ensure  => $use_facter_version,
+    ensure  => $user_facter_version,
     require => Package['lsb-release'],
     tag     => 'install-puppet',
   }
@@ -46,10 +49,10 @@ class puppet::client {
   }
 
   $lsb_release_pkg = $::operatingsystem ? {
-    Debian => 'lsb-release',
-    Ubuntu => 'lsb-release',
-    Redhat => 'redhat-lsb',
-    fedora => 'redhat-lsb',
+    'Debian' => 'lsb-release',
+    'Ubuntu' => 'lsb-release',
+    'Redhat' => 'redhat-lsb',
+    'fedora' => 'redhat-lsb',
   }
 
   package {'lsb-release':
@@ -64,7 +67,8 @@ class puppet::client {
     tag       => 'install-puppet',
     pattern   => 'ruby /usr/sbin/puppetd -w',
     # make sure the puppet cron is installed before the service is stopped
-    require   => [ Cron[puppetd], File['/etc/puppet/puppet.conf'] ]
+    #require   => [ Cron[puppetd], File['/etc/puppet/puppet.conf'] ]
+    require   => Cron[puppetd]
   }
 
   user { 'puppet':
@@ -74,26 +78,26 @@ class puppet::client {
 
   file {'/etc/puppet/puppetd.conf': ensure => absent }
 
-  file { '/etc/puppet/puppet.conf':
-    source => [ "puppet://${server}/files/puppet/client/${fqdn}/puppet.conf",
-      "puppet://${server}/files/puppet/client/puppet.conf",
-      "puppet://${server}/modules/puppet/client/puppet.conf" ],
-    owner  => 'root',
-    group  => 0,
-    mode   => '0644';
-  }
-
-  file { '/etc/puppet/namespaceauth.conf':
-    source => [
-      "puppet://${server}/files/puppet/client/${fqdn}/namespaceauth.conf",
-      "puppet://${server}/files/puppet/client/namespaceauth.conf.${operatingsystem}",
-      "puppet://${server}/files/puppet/client/namespaceauth.conf",
-      "puppet://${server}/modules/puppet/client/namespaceauth.conf.${operatingsystem}",
-      "puppet://${server}/modules/puppet/client/namespaceauth.conf" ],
-    owner  => root,
-    group  => 0,
-    mode   => '0600';
-  }
+#  file { '/etc/puppet/puppet.conf':
+#    source => [ "puppet:///files/puppet/client/${fqdn}/puppet.conf",
+#      "puppet:///files/puppet/client/puppet.conf",
+#      "puppet:///modules/puppet/client/puppet.conf" ],
+#    owner  => 'root',
+#    group  => 0,
+#    mode   => '0644';
+#  }
+#
+#  file { '/etc/puppet/namespaceauth.conf':
+#    source => [
+#      "puppet:///files/puppet/client/${fqdn}/namespaceauth.conf",
+#      "puppet:///files/puppet/client/namespaceauth.conf.${operatingsystem}",
+#      "puppet:///files/puppet/client/namespaceauth.conf",
+#      "puppet:///modules/puppet/client/namespaceauth.conf.${operatingsystem}",
+#      "puppet:///modules/puppet/client/namespaceauth.conf" ],
+#    owner  => root,
+#    group  => 0,
+#    mode   => '0600';
+#  }
 
   file {'/var/run/puppet/':
     ensure => directory,
@@ -143,69 +147,9 @@ class puppet::client {
     require => Package['puppet']
   }
 
-  file { '/etc/init.d/puppet':
-    source  => 'puppet:///modules/puppet/client/puppet.initd',
-    mode    => '0755',
-    require => Package['puppet']
-  }
-
+#  file { '/etc/init.d/puppet':
+#    source  => 'puppet:///modules/puppet/client/puppet.initd',
+#    mode    => '0755',
+#    require => Package['puppet']
+#  }
 }
-
-# Installs Augeas
-class puppet::augeas {
-  include apt::tryphon
-
-  package { 'libaugeas-ruby': }
-
-  file { ['/usr/local/share/augeas', '/usr/local/share/augeas/lenses']:
-    ensure  => directory,
-    require => Package[libaugeas-ruby]
-  }
-
-  file { '/usr/share/augeas/lenses/contrib': # used by CampToCamp modules
-    ensure  => link,
-    target  => '/usr/local/share/augeas/lenses',
-    require => File['/usr/local/share/augeas/lenses']
-  }
-
-  define lens($source) {
-    file { "/usr/local/share/augeas/lenses/${name}.aug":
-      source => $source
-    }
-  }
-
-  if $debian::lenny {
-    include puppet::augeas::lenny
-  }
-  
-  # The Debian lenny way of doing things
-  class lenny {
-    apt::preferences { 'libaugeas-ruby':
-      package  => libaugeas-ruby,
-      pin      => 'release a=lenny-backports',
-      priority => 999,
-      before   => Package[libaugeas-ruby],
-      require  => Apt::Preferences['libaugeas-ruby18']
-    }
-
-    apt::preferences { 'libaugeas-ruby18':
-      package  => 'libaugeas-ruby1.8',
-      pin      => 'release a=lenny-backports',
-      priority => 999
-    }
-
-    apt::preferences { 'libaugeas0':
-      package  => 'libaugeas0',
-      pin      => 'release a=lenny-backports',
-      priority => 999
-    }
-
-    apt::preferences { 'augeas-lenses':
-      package  => 'augeas-lenses',
-      pin      => 'release a=lenny-backports',
-      priority => 999
-    }
-  }
-
-}
-

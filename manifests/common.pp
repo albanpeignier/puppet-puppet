@@ -1,13 +1,14 @@
 class puppet::common {
-  if !$debian::jessie {
+
+  if $lsbdistcodename != 'jessie' {
     include apt::backports
   }
 
-  if $debian::wheezy {
+  if $lsbdistcodename == 'wheezy' {
     include puppet::ruby
   }
 
-  if $debian::lenny {
+  if $lsbdistcodename == 'lenny' {
     apt::preferences { puppet-common:
       package => puppet-common,
       pin => "release a=lenny-backports",
@@ -17,7 +18,7 @@ class puppet::common {
     }
   }
 
-  if $debian::squeeze {
+  if $lsbdistcodename == 'squeeze' {
     apt::preferences { puppet-common:
       package => puppet-common,
       pin => "release a=squeeze-backports",
@@ -26,16 +27,4 @@ class puppet::common {
       before => Package[puppet]
     }
   }
-}
-
-class puppet::ruby {
-  # Requires gem command to be ~> 1.9.3
-
-  file { '/usr/bin/gem':
-    ensure => link,
-    target => '/usr/bin/gem1.9.1'
-  }
-
-  # Dummy package (from bearstech ?) via forced links for ruby, gem, etc
-  package { 'ruby': ensure => purged }
 }

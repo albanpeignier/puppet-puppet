@@ -2,14 +2,14 @@
 # file managed by puppet
 
 FLAGS="/etc/puppet/dont-run /tmp/stop-puppet /tmp/no-puppet /tmp/np"
-SERVER="<%= puppet_server %>"
+SERVER="<%= @puppet_server %>"
 BIN="/usr/sbin/puppetd"
 ARGS="--onetime --no-daemonize --server $SERVER"
 FACILITY="local1.warn"
 
-<% if has_variable?("facter_envvars") and facter_envvars.is_a?(Array) then -%>
+<% if has_variable?("facter_envvars") and @facter_envvars.is_a?(Array) then -%>
 # see http://reductivelabs.com/trac/puppet/wiki/FrequentlyAskedQuestions#can-i-access-environmental-variables-with-facter
-<% facter_envvars.each do |f| -%>
+<% @facter_envvars.each do |f| -%>
 export FACTER_<%= f %>
 <% end -%>
 <% end -%>
