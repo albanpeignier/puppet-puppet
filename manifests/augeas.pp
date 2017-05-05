@@ -1,6 +1,6 @@
 # Installs Augeas
 class puppet::augeas {
-  include apt::tryphon
+  include infra::apt::tryphon
 
   package { 'libaugeas-ruby': }
 
@@ -14,11 +14,4 @@ class puppet::augeas {
     target  => '/usr/local/share/augeas/lenses',
     require => File['/usr/local/share/augeas/lenses']
   }
-
-  if $debian::lenny {
-    include puppet::augeas::lenny
-  }
-  
-  # The Debian lenny way of doing things
-
 }
